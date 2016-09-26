@@ -484,10 +484,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       } else if (path == name) {
         v = value;
       } else {
-        // TODO(kschaaf): confirm design of this
-        v = data[name];
-        if (v === undefined && arg.structured) {
+        if (arg.structured) {
           v = Polymer.Path.get(data, name);
+        } else {
+          v = data[name];
         }
       }
       if (arg.wildcard) {
