@@ -151,6 +151,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this._instance = new this._ctor(this);
           var root = this._instance.root;
           parentNode.insertBefore(root, this);
+          customElements.flush && customElements.flush();
         } else {
           var c$ = this._instance.children;
           if (c$ && c$.length) {

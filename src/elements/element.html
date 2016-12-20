@@ -287,32 +287,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      // reserved for canonical behavior
+
       connectedCallback() {
-        if (hostStack.isEmpty()) {
-          // note, this should never recurse to root elements; this will
-          // need new ShadyCSS api
-          // (see https://github.com/webcomponents/shadycss/issues/42)
-          this.updateStyles();
+        this.updateStyles();
+        if (!this.__dataInitialized) {
+          if (this._template) {
+            this.root = this._stampTemplate(this._template);
+          } else {
+            this.root = this;
+          }          
           this._flushProperties();
+          this.ready();
+        }
+      }
+
+      _flushClients() {
+        if (!this.__attachedDom && this._template) {
+          this.__attachedDom = true;
+          this.__dataPendingClients = null;
+          this.root = this._attachDom(this.root);
+          customElements.flush && customElements.flush();
+        } else {
+          super._flushClients();
         }
       }
 
       disconnectedCallback() {}
-
-      ready() {
-        super.ready();
-        if (this._template) {
-          hostStack.beginHosting(this);
-          this.root = this._stampTemplate(this._template);
-          this._flushProperties();
-          this.root = this._attachDom(this.root);
-          hostStack.endHosting(this);
-        } else {
-          this.root = this;
-          this._flushProperties();
-        }
-      }
 
       /**
        * Attach an element's stamped dom to itself. By default,

@@ -549,6 +549,7 @@ Then the `observe` property should be configured as follows:
       var beforeRow = this._instances[instIdx + 1];
       var beforeNode = beforeRow ? beforeRow.children[0] : this;
       this.parentNode.insertBefore(inst.root, beforeNode);
+      customElements.flush && customElements.flush();
       this._instances[instIdx] = inst;
       return inst;
     }

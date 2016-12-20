@@ -101,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       matrix.push(addUrlOption(last, 'wc-shimcssproperties=true'));
     }
 
-    suites = combinations(suites, [matrix]);
+    suites = combinations(suites, [['wc-register=true&wc-shadydom=true&wc-shimcssproperties=true']]);
 
     console.log('Testing suites:\n\t' + suites.join('\n\t'));
 

@@ -1540,7 +1540,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.__dataPendingClients = null;
           clients.forEach((v, client) => {
             // TODO(kschaaf): more explicit check?
-            if (client._flushProperties) {
+            if (client._flushProperties && client.__dataInitialized) {
               client._flushProperties(true);
             }
           });
@@ -1588,10 +1588,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * @override
        */
       _flushProperties(fromAbove) {
-        if (!this.__dataInitialized) {
-          this.ready();
-        }
-        if (this.__dataPending || this.__dataPendingClients) {
+        if (this.__dataPending || !this.__dataInitialized) {
+          this.__dataInitialized = true;
           this.__dataFromAbove = fromAbove;
           super._flushProperties();
           if (!this.__dataCounter) {

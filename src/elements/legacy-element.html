@@ -57,13 +57,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      ready() {
-        this._applyListeners();
-        this._ensureAttributes();
-        super.ready();
-      }
-
       connectedCallback() {
+        if (!this.__dataInitialized) {
+          this._applyListeners();
+          this._ensureAttributes();
+        }
         super.connectedCallback();
         this.isAttached = true;
         this.attached();

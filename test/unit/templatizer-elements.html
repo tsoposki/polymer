@@ -117,6 +117,7 @@
         } : null);
       var parent = Polymer.dom(this).parentNode;
       Polymer.dom(parent).appendChild(this.instance.root);
+      customElements.flush && customElements.flush();
     }
   });
 
