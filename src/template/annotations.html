@@ -237,22 +237,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       let node = root.firstChild;
       let i = 0;
       while (node) {
-        // BREAKME(kschaaf): pseudo-bc auto-wrapper for template type extensions
-        if (node.localName === 'template') {
-          let t = node;
-          let is = t.getAttribute('is');
-          // stamp `<dom-*>` elements
-          if (is && is.indexOf('dom-') === 0) {
-            t.removeAttribute('is');
-            node = t.ownerDocument.createElement(is);
-            root.replaceChild(node, t);
-            node.appendChild(t);
-            while(t.attributes.length) {
-              node.setAttribute(t.attributes[0].name, t.attributes[0].value);
-              t.removeAttribute(t.attributes[0].name);
-            }
-          }
-        }
         if (node.localName === 'template' &&
           !node.hasAttribute('preserve-content')) {
           parseTemplate(node, i, list, note);

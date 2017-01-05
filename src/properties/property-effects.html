@@ -846,12 +846,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    *   Polymer.Annotator
    * @private
    */
-  function setupBindings(inst, dom, notes) {
+  function setupStampedNodes(inst, dom, notes) {
     if (notes.length) {
       let nodes = new Array(notes.length);
       for (let i=0; i < notes.length; i++) {
         let note = notes[i];
         let node = nodes[i] = inst._findTemplateAnnotatedNode(dom, note);
+        // template "directive" handling
+        if (note.templateContent) {
+          let type = node.getAttribute('is');
+          if (type) {
+            let reg = customElements.get(type);
+            //TODO(kschaaf): What do we want for a directive registry API?
+            // Currently piggy-backing on customElements registry
+            if (reg.upgrader) {
+              reg.upgrader.upgrade(node);
+              applyAttributes(node);
+            }
+          }
+          inst.__dataTemplates.push(node);
+        }
         node.__dataHost = inst;
         if (note.bindings) {
           setupCompoundBinding(note, node);
@@ -861,6 +875,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
     if (inst._bindListeners) {
       setupBindListeners(inst);
+    }
+  }
+
+  function applyAttributes(node) {
+    if (node.attributeChangedCallback && node.hasAttributes()) {
+      let observed = node.constructor.observedAttributes;
+      if (observed) {
+        for (let i=0; i<observed.length; i++) {
+          let name = observed[i];
+          if (node.hasAttribute(name)) {
+            node.attributeChangedCallback(name, null, node.getAttribute(name));
+          }
+        }
+      }
     }
   }
 
@@ -1210,6 +1238,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // May be set on instance prior to upgrade
         this.__dataCompoundStorage = this.__dataCompoundStorage || null;
         this.__dataHost = this.__dataHost || null;
+        this.__dataTemplates = [];
       }
 
       /**
@@ -1642,7 +1671,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _stampTemplate(template) {
         let dom = super._stampTemplate(template);
         let notes = (template._content || template.content)._notes;
-        setupBindings(this, dom, notes);
+        setupStampedNodes(this, dom, notes);
         return dom;
       }
 
@@ -2111,6 +2140,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 binding.parts[0].negate);
             }
             addBindingEffect(this, binding, i);
+          }
+        }
+      }
+
+      _disconnectTemplates() {
+        let templates = this.__dataTemplates;
+        for (let i=0; i<templates.length; i++) {
+          let t = templates[i];
+          if (t.disconnectedCallback) {
+            t.disconnectedCallback();
+          }
+        }
+      }
+
+      _connectTemplates() {
+        let templates = this.__dataTemplates;
+        for (let i=0; i<templates.length; i++) {
+          let t = templates[i];
+          if (t.connectedCallback) {
+            t.connectedCallback();
           }
         }
       }

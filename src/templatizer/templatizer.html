@@ -31,13 +31,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     PatchedHTMLTemplateElement._newInstance = null;
 
     class DataTemplate extends Polymer.PropertyEffects(PatchedHTMLTemplateElement) {
-      static upgradeTemplate(template) {
+      static upgrade(template) {
         PatchedHTMLTemplateElement._newInstance = template;
-        Object.setPrototypeOf(template, DataTemplate.prototype);
-        new DataTemplate();
+        Object.setPrototypeOf(template, this.prototype);
+        new this();
         PatchedHTMLTemplateElement._newInstance = null;
       }
     }
+    Polymer.DataTemplate = DataTemplate;
 
     class Templatizer {
 
@@ -108,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               n._templateInstance = this;
             }
             if (host.__hideTemplateChildren__) {
-              this._showHideChildren(true);
+              this.showHideChildren(true);
             }
             // Flush props only when props are passed if instance props exist
             // or when there isn't instance props.
@@ -116,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               this._flushProperties(true);
             }
           }
-          _showHideChildren(hide) {
+          showHideChildren(hide) {
             var c = this.children;
             for (var i=0; i<c.length; i++) {
               var n = c[i];
@@ -142,6 +143,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               if (n._showHideChildren) {
                 n._showHideChildren(hide);
               }
+            }
+          }
+          connect(beforeNode, parentNode) {
+            parentNode = parentNode || beforeNode.parentNode;
+            if (parentNode) {
+              parentNode.insertBefore(this.root, beforeNode);
+              this._connectTemplates();              
+            }
+          }
+          disconnect(retain) {
+            let children = this.children;
+            if (children.length) {
+              let parentNode = children[0].parentNode;
+              for (let i=0; i<children.length; i++) {
+                if (retain) {
+                  this.root.appendChild(children[i]);
+                } else {
+                  parentNode.removeChild(children[i]);
+                }
+              }              
+              this._disconnectTemplates();
             }
           }
           _configureProperties(props) {
@@ -184,7 +206,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (options.fwdHostPropToInstance) {
           // Provide data API
           // TODO(kschaaf): memoize template proto
-          DataTemplate.upgradeTemplate(template);
+          if (!template.setProperties) {
+            DataTemplate.upgrade(template);
+          }
           // Add template - >instances effects
           // and host <- template effects
           var hostProps = template._content._hostProps;

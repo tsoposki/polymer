@@ -5088,9 +5088,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('modelForElement', function() {
         var dom = unconfigured1.root;
         var stamped1 = dom.querySelectorAll('*:not(template):not(dom-repeat)');
-        var repeater1 = dom.querySelector('dom-repeat[as=itema]');
-        var repeater2 = dom.querySelector('dom-repeat[as=itemb]');
-        var repeater3 = dom.querySelector('dom-repeat[as=itemc]');
+        var repeater1 = dom.querySelector('template[is=dom-repeat][as=itema]');
+        var repeater2 = dom.querySelector('template[is=dom-repeat][as=itemb]');
+        var repeater3 = dom.querySelector('template[is=dom-repeat][as=itemc]');
 
         model = repeater1.modelForElement(stamped1[4]);
         assert.equal(model.itema.prop, 'prop-1');
@@ -5108,9 +5108,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('indexForElement', function() {
         var dom = unconfigured1.root;
         var stamped1 = dom.querySelectorAll('*:not(template):not(dom-repeat)');
-        var repeater1 = dom.querySelector('dom-repeat[as=itema]');
-        var repeater2 = dom.querySelector('dom-repeat[as=itemb]');
-        var repeater3 = dom.querySelector('dom-repeat[as=itemc]');
+        var repeater1 = dom.querySelector('template[is=dom-repeat][as=itema]');
+        var repeater2 = dom.querySelector('template[is=dom-repeat][as=itemb]');
+        var repeater3 = dom.querySelector('template[is=dom-repeat][as=itemc]');
 
         assert.equal(repeater1.indexForElement(stamped1[4]), 0);
         assert.equal(repeater2.indexForElement(stamped1[4]), 0);
@@ -5120,9 +5120,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('indexForElement', function() {
         var dom = unconfigured1.root;
         var stamped1 = dom.querySelectorAll('*:not(template):not(dom-repeat)');
-        var repeater1 = dom.querySelector('dom-repeat[as=itema]');
-        var repeater2 = dom.querySelector('dom-repeat[as=itemb]');
-        var repeater3 = dom.querySelector('dom-repeat[as=itemc]');
+        var repeater1 = dom.querySelector('template[is=dom-repeat][as=itema]');
+        var repeater2 = dom.querySelector('template[is=dom-repeat][as=itemb]');
+        var repeater3 = dom.querySelector('template[is=dom-repeat][as=itemc]');
 
         assert.equal(repeater1.itemForElement(stamped1[4]).prop, 'prop-1');
         assert.equal(repeater2.itemForElement(stamped1[4]).prop, 'prop-1-1');
@@ -5132,9 +5132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test.skip('keyForElement', function() {
         var dom = unconfigured1.root;
         var stamped1 = dom.querySelectorAll('*:not(template):not(dom-repeat)');
-        var repeater1 = dom.querySelector('dom-repeat[as=itema]');
-        var repeater2 = dom.querySelector('dom-repeat[as=itemb]');
-        var repeater3 = dom.querySelector('dom-repeat[as=itemc]');
+        var repeater1 = dom.querySelector('template[is=dom-repeat][as=itema]');
+        var repeater2 = dom.querySelector('template[is=dom-repeat][as=itemb]');
+        var repeater3 = dom.querySelector('template[is=dom-repeat][as=itemc]');
         var items1 = unconfigured1.items;
         var items2 = unconfigured1.items[0].items;
         var items3 = unconfigured1.items[0].items[0].items;
