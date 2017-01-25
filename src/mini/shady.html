@@ -78,7 +78,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.shadyRoot._dirtyRoots = [];
         // capture insertion point list
         var i$ = this.shadyRoot._insertionPoints = !this._notes ||
-          this._notes._hasContent ?
+          this._template.hasAttribute('has-content') ?
           this.shadyRoot.querySelectorAll('content') : [];
         // save logical tree info
         // a. for shadyRoot
